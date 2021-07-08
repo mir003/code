@@ -1,1 +1,1 @@
-# template2
+welcome to the game
