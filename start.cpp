@@ -2,8 +2,8 @@
 #include<bits/stdc++.h>
 #define ll int
 #define pb push_back
-#define MAX 2e8
-#define MIN -2e8
+#define MAX 2e18
+#define MIN -2e18
 #define MOD 1000000007
 ///#define mod2 20071027
 ///#define MOD 998244353
@@ -26,100 +26,58 @@
 #define FILE   freopen("input.txt", "r", stdin);  freopen("out.txt", "w", stdout);
 #define coutd cout<<fixed<<setprecision(10)//coutd<<res<<endl;
 using namespace std;
-const ll N = 200010, M = 3010;
-ll n, m, k;
-int a[N][6],b[6];
-int tree[33][3*N][2];
-void build(ll l, ll r, ll pos, ll mask) {
-    if(l==r) {
-        ll sum=0;
-        for(int i=0; i<k; i++) {
-            if(mask&(1LL<<i)) {
-                sum+=a[l][i];
-            } else sum-=a[l][i];
-        }
-        tree[mask][pos][0]=sum;
-        tree[mask][pos][1]=sum;
-        return;
-    }
-    ll mid=(l+r)/2;
-    build(l, mid, 2*pos, mask);
-    build(mid+1, r, 2*pos+1, mask);
-    tree[mask][pos][0]=min(tree[mask][2*pos][0], tree[mask][2*pos+1][0]);
-    tree[mask][pos][1]=max(tree[mask][2*pos][1], tree[mask][2*pos+1][1]);
-    return;
-}
-void update(ll l, ll r, ll pos, ll P, ll mask) {
-    if(l>P || r<P)
-        return;
-    if(l==r && l==P) {
-        ll sum=0;
-        for(int i=0; i<k; i++) {
-            if(mask&(1LL<<i)) {
-                sum+=b[i];
-            } else sum-=b[i];
-        }
-        tree[mask][pos][0]=sum;
-        tree[mask][pos][1]=sum;
-        return;
-    }
-    ll mid=(l+r)/2;
-    update(l, mid, 2*pos, P, mask);
-    update(mid+1, r, 2*pos+1, P, mask);
-    tree[mask][pos][0]=min(tree[mask][2*pos][0], tree[mask][2*pos+1][0]);
-    tree[mask][pos][1]=max(tree[mask][2*pos][1], tree[mask][2*pos+1][1]);
-    return;
-}
-ll minq(ll l, ll r, ll pos, ll L, ll R, ll mask) {
-    if(l>R || r<L)
-        return MAX;
-    if(l>=L && r<=R)
-        return tree[mask][pos][0];
-    ll mid=(l+r)/2;
-    return min(minq(l, mid, 2*pos, L,R,mask), minq(mid+1, r, 2*pos+1, L, R, mask));
-}
-ll maxq(ll l, ll r, ll pos, ll L, ll R, ll mask) {
-    if(l>R || r<L)
-        return MIN;
-    if(l>=L && r<=R)
-        return tree[mask][pos][1];
-    ll mid=(l+r)/2;
-    return max(maxq(l, mid, 2*pos, L,R,mask), maxq(mid+1, r, 2*pos+1, L, R, mask));
-}
+const ll N = 200010, M = 80000;
+ll t, n,k,a[N],res;
 int main() {
-    in2i(n,k);
-    for(int i=1; i<=n; i++) {
-        for(int j=0; j<k; j++) {
-            in1i(a[i][j]);
+    FAST
+    cin>>t;
+    while(t--) {
+        cin>>n;
+        ll g=0;
+        res=0;
+        for(int i=0; i<n; i++) {
+            cin>>a[i];
+            g=__gcd(a[i], g);
         }
-    }
-    for(int mask=0; mask<(1LL<<k); mask++)
-        build(1, n, 1, mask);
-    in1i(m);
-    while(m--) {
-        ll f;
-        in1i(f);
-        if(f==1) {
-            ll x;
-            in1i(x);
-            for(int i=0; i<k; i++) {
-                in1i(b[i]);
+        set<ll>st;
+        for(int i=0; i<n; i++) {
+            a[i]/=g;
+            if(a[i]!=1) {
+                st.insert(i);
             }
-            for(int mask=0; mask<(1LL<<k); mask++)
-                update(1, n, 1, x, mask);
+        }
+        while(!st.empty()) {
+            res++;
+            set<ll>tmp;
+            ll pre=a[0];
+            for(auto u=st.begin(); u!=st.end(); u++) {
+                auto it=u;
+                it++;
+                if(it==st.end()) break;
+//                cout<<(*u)<<" "<<(*it)<<endl;
+                if((*it)!=(*u)+1) a[*u]=1;
+                else {
+                    a[*u]=__gcd(a[*u], a[*it]);
+                    if(a[*u]!=1) {
+                        tmp.insert(*u);
+                    }
+                }
+            }
+            if(st.find(0)!=st.end() && st.find(n-1)!=st.end()) {
+                a[n-1]=__gcd(a[n-1], pre);
+                if(a[n-1]!=1) {
+                    tmp.insert(n-1);
+                }
+            }
+            st=tmp;
+        }
+        cout<<res<<endl;
 
-        } else {
-            ll l, r;
-            in2i(l,r);
-            ll ret=MIN;
-            for(int mask=0; mask<(1LL<<k); mask++){
-                ret=max(maxq(1, n, 1, l, r, mask)-minq(1, n, 1, l, r, mask), ret);
-            }
-            printf("%d\n",ret);
-        }
     }
     return 0;
 }
 /*
-
+1
+4
+16 24 10 5
 */
