@@ -1,5 +1,3 @@
-<snippet>
-	<content><![CDATA[
 ll m, S, T, k, n, c, lv[N]; ///S = source, T= sink
 struct edge {
     ll to, rev, flow, cap;
@@ -46,8 +44,7 @@ bool make_level_graph() {
     if (lv[T] == 0) return 0;
     return 1;
 }
-ll dinic()
-{
+ll dinic() {
     ll ret = 0;
     while (make_level_graph()) {
         while (ll max_flow = send_flow(S, MAX)) {
@@ -57,11 +54,9 @@ ll dinic()
     return ret;
 }
 
-int solve()
-{
+int solve() {
     cin >> n >> m;
-    for (int i = 0; i < m; i++)
-    {
+    for (int i = 0; i < m; i++) {
         ll u, v, cap;
         cin >> u >> v >> cap;
         add_edge(u, v, cap);
@@ -72,9 +67,3 @@ int solve()
 
     return 0;
 }
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	<tabTrigger>flow</tabTrigger> 
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<!-- <scope>source.python</scope> -->
-</snippet>

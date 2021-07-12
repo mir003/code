@@ -1,11 +1,7 @@
-<snippet>
-	<content><![CDATA[
 ///extended euclid
 ///(x+k*(b/gcd(a,b)),y–k*(a/gcd(a,b))), k is any integer
-ll extended_euclid(ll a, ll b, ll & x, ll & y)///returns gcd(A,B), x, y of Ax+By=gcd(A, B)
-{
-    if (a == 0)
-    {
+ll extended_euclid(ll a, ll b, ll & x, ll & y) { ///returns gcd(A,B), x, y of Ax+By=gcd(A, B)
+    if (a == 0) {
         x = 0;
         y = 1;
         return b;
@@ -16,10 +12,3 @@ ll extended_euclid(ll a, ll b, ll & x, ll & y)///returns gcd(A,B), x, y of Ax+By
     y = x1;
     return d;
 }
-
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	<!-- <tabTrigger>hello</tabTrigger> -->
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<!-- <scope>source.python</scope> -->
-</snippet>
