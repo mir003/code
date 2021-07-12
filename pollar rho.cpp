@@ -1,8 +1,3 @@
-<snippet>
-	<content><![CDATA[
-#include <bits/stdc++.h>
-#define ll long long
-using namespace std;
 #define MAXL (50000>>5)+1
 #define GET(x) (mark[x>>5]>>(x&31)&1)
 #define SET(x) (mark[x>>5] |= 1<<(x&31))
@@ -126,7 +121,7 @@ void llfactorize(ll n, vector<ll> &f) {
     llfactorize(d, f);
     llfactorize(n / d, f);
 }
-int solve() {
+int main() {
     sieve();
 
     ll n;
@@ -148,20 +143,5 @@ int solve() {
             printf("^%d", it->second);
     }
     puts("");
-
     return 0;
 }
-int main()
-{
-#ifndef ONLINE_JUDGE
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-#endif
-    return solve();
-}
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	<tabTrigger>pollar rho</tabTrigger>
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<!-- <scope>source.python</scope> -->
-</snippet>

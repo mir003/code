@@ -1,15 +1,11 @@
-<snippet>
-	<content><![CDATA[
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 using LL = long long;
 
-LL mulmod(LL a, LL b, LL base)
-{
+LL mulmod(LL a, LL b, LL base) {
     LL rv = 0;
     a %= base;
 
-    while (b)
-    {
+    while (b) {
         if (b & 1) rv = (rv + a) % base;
         a = (a + a) % base;
         b /= 2;
@@ -17,11 +13,9 @@ LL mulmod(LL a, LL b, LL base)
     return rv % base;
 }
 
-LL bpow(LL a, LL b, LL base)
-{
+LL bpow(LL a, LL b, LL base) {
     LL rv = 1;
-    while (b)
-    {
+    while (b) {
         if (b & 1) rv = mulmod(rv, a, base);
         a = mulmod(a, a, base);
         b /= 2;
@@ -30,8 +24,7 @@ LL bpow(LL a, LL b, LL base)
 }
 
 
-bool Miller(LL p, int iteration)
-{
+bool Miller(LL p, int iteration) {
     if (p == 2) return true;
     if (p < 2) return false;
     if (p % 2 == 0) return false;
@@ -40,17 +33,14 @@ bool Miller(LL p, int iteration)
     LL s = p - 1;
     while (s % 2 == 0) s /= 2;
 
-    for (int i = 0; i < iteration; i++)
-    {
+    for (int i = 0; i < iteration; i++) {
         LL a = rng() % (p - 1) + 1, temp = s;
         LL mod = bpow(a, temp, p);
-        while (temp != p - 1 and mod != 1 and mod != p - 1)
-        {
+        while (temp != p - 1 and mod != 1 and mod != p - 1) {
             mod = mulmod(mod, mod, p);
             temp = temp * 2;
         }
-        if (mod != p - 1 and temp % 2 == 0)
-        {
+        if (mod != p - 1 and temp % 2 == 0) {
             return false;
         }
     }
@@ -58,15 +48,8 @@ bool Miller(LL p, int iteration)
 }
 
 
-int main()
-{
+int main() {
 
     cout<<"Is prime "<<Miller(29996224275833LL,20)<<endl;
     return 0;
 }
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	<!-- <tabTrigger>hello</tabTrigger> -->
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<!-- <scope>source.python</scope> -->
-</snippet>
