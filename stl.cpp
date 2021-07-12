@@ -1,6 +1,3 @@
-<snippet>
-	<content><![CDATA[
-
 ///using string as subscript in vector and push string in the vector
 map<string,vector<string> >m;
 /// using two strings as subscript in 2D array
@@ -14,11 +11,3 @@ str.erase (10,8); ///10th pos thek 8 ta letter erase
 getline(cin,name);
 __builtin_popcount(x);
 __builtin_popcountll(x);
-
-
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	 <tabTrigger>stl</tabTrigger>
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<!-- <scope>source.python</scope> -->
-</snippet>

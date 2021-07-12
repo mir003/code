@@ -27,57 +27,12 @@
 #define coutd cout<<fixed<<setprecision(10)//coutd<<res<<endl;
 using namespace std;
 const ll N = 200010, M = 80000;
-ll t, n,k,a[N],res;
+ll t, n;
 int main() {
     FAST
-    cin>>t;
-    while(t--) {
-        cin>>n;
-        ll g=0;
-        res=0;
-        for(int i=0; i<n; i++) {
-            cin>>a[i];
-            g=__gcd(a[i], g);
-        }
-        set<ll>st;
-        for(int i=0; i<n; i++) {
-            a[i]/=g;
-            if(a[i]!=1) {
-                st.insert(i);
-            }
-        }
-        while(!st.empty()) {
-            res++;
-            set<ll>tmp;
-            ll pre=a[0];
-            for(auto u=st.begin(); u!=st.end(); u++) {
-                auto it=u;
-                it++;
-                if(it==st.end()) break;
-//                cout<<(*u)<<" "<<(*it)<<endl;
-                if((*it)!=(*u)+1) a[*u]=1;
-                else {
-                    a[*u]=__gcd(a[*u], a[*it]);
-                    if(a[*u]!=1) {
-                        tmp.insert(*u);
-                    }
-                }
-            }
-            if(st.find(0)!=st.end() && st.find(n-1)!=st.end()) {
-                a[n-1]=__gcd(a[n-1], pre);
-                if(a[n-1]!=1) {
-                    tmp.insert(n-1);
-                }
-            }
-            st=tmp;
-        }
-        cout<<res<<endl;
 
-    }
     return 0;
 }
 /*
-1
-4
-16 24 10 5
+
 */
