@@ -1,5 +1,3 @@
-<snippet>
-	<content><![CDATA[
 ll n, m, par[N];
 vector<ll>adj[N], cost[N];
 ll d[N];
@@ -31,9 +29,3 @@ void path(ll s) {///shortest path from 1 to n
     path(par[s]);
     printf("%lld ", s);
 }
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	 <tabTrigger>dijkstra</tabTrigger> 
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<!-- <scope>source.python</scope> -->
-</snippet>

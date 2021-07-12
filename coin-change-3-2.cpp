@@ -1,5 +1,3 @@
-<snippet>
-	<content><![CDATA[
 ///solution 2: using coin decompose
 ///similar to coin change 1
 const ll N=300010;
@@ -7,11 +5,9 @@ ll t,tc, n, k, c, a[105];
 vector<ll>coin;
 bool pre[100005], cur[100005];
 
-int main()
-{
+int main() {
     in1(t);
-    while(t--)
-    {
+    while(t--) {
         ll res=0;
         memz(pre);
         memz(cur);
@@ -21,12 +17,10 @@ int main()
         in2(n,k);
         for(int i=0; i<n; i++)
             in1(a[i]);
-        for(int i=0; i<n; i++)
-        {
+        for(int i=0; i<n; i++) {
             in1(c);
             ll p=1;
-            while(c-p>=0)
-            {
+            while(c-p>=0) {
                 coin.pb(a[i]*p);
                 c-=p;
                 p*=2;
@@ -35,25 +29,17 @@ int main()
                 coin.pb(a[i]*c);
 
         }
-        for(ll val:coin)
-        {
-            for(int sum=val; sum<=k; sum++)
-            {
+        for(ll val:coin) {
+            for(int sum=val; sum<=k; sum++) {
                 cur[sum] |=pre[sum-val];
             }
             for(int sum=1; sum<=k; sum++)
                 pre[sum]=cur[sum];
         }
-        for(int sum=1;sum<=k;sum++)
+        for(int sum=1; sum<=k; sum++)
             res+=pre[sum];
         TC(tc);
         printf("%lld\n", res);
     }
     return 0;
 }
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	<!-- <tabTrigger>hello</tabTrigger> -->
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<!-- <scope>source.python</scope> -->
-</snippet>

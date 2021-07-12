@@ -1,5 +1,3 @@
-<snippet>
-	<content><![CDATA[
 const ll N = 300010,  M = 2005;
 const double eps = 1e-9;
 const double pi = 4 * atan(1);
@@ -29,8 +27,7 @@ ll frq[N];
 void add(ll pre, ll s, ll val) {
     if (val == 1) {
         frq[lvl[s]]++;
-    }
-    else {
+    } else {
         frq[lvl[s]]--;
     }
     for (auto u : adj[s]) {
@@ -51,10 +48,10 @@ void dfs(ll pre, ll s, ll keep) {
     }
     add(pre, s, 1);
 
-    for(auto u:q[s]){
+    for(auto u:q[s]) {
         res[s].pb(frq[u]);
     }
- 
+
     if (bigone[s] != -1) {
         big[bigone[s]] = 0; /// jodi keep == 0 hoy taile se bigchild soho sobai k muche dibe eksathe
     }
@@ -80,16 +77,10 @@ int solve() {
         q[u].pb(d+1);
     }
     dfs(1, 1, 0);
-    for(auto u:qq){
+    for(auto u:qq) {
         ll ret = res[u].front();
         res[u].pop_front();
         printf("%lld\n", ret);
     }
     return 0;
 }
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	<tabTrigger>dsu</tabTrigger> 
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<!-- <scope>source.python</scope> -->
-</snippet>
