@@ -1,32 +1,25 @@
-<snippet>
-    <content><![CDATA[
 ///HLD**************************************
 vector<ll>adj[N];
 ll n, m, q, par[N], lv[N], stsz[N], sc[N], node_head[N], new_pos, cost[N], indx[N], res[N], root=1;
 ll tree[4 * N], lz[4 * N];
 
-void lazy(ll l, ll r, ll pos)
-{
+void lazy(ll l, ll r, ll pos) {
     if(lz[pos]==0) return;
     tree[pos] =  lz[pos];
-    if (l != r)
-    {
+    if (l != r) {
         lz[2 * pos] = lz[pos];
         lz[2 * pos + 1] = lz[pos];
     }
     lz[pos] = 0;
     return;
 }
-void update(ll l, ll r, ll pos, ll L, ll R, ll val)
-{
+void update(ll l, ll r, ll pos, ll L, ll R, ll val) {
     lazy(l, r, pos);
     if (l > R || r < L)
         return;
-    if (l >= L && r <= R)
-    {
+    if (l >= L && r <= R) {
         tree[pos] = val;
-        if (l != r)
-        {
+        if (l != r) {
             lz[2 * pos] = val;
             lz[2 * pos + 1] = val;
         }
@@ -35,11 +28,10 @@ void update(ll l, ll r, ll pos, ll L, ll R, ll val)
     ll mid = (l + r) / 2;
     update(l, mid, 2 * pos, L, R, val);
     update(mid + 1, r, 2 * pos + 1, L, R, val);
-    tree[pos] = min(tree[2 * pos] , tree[2 * pos + 1]);
+    tree[pos] = min(tree[2 * pos], tree[2 * pos + 1]);
     return;
 }
-ll query(ll l, ll r, ll pos, ll L, ll R)
-{
+ll query(ll l, ll r, ll pos, ll L, ll R) {
     lazy(l, r, pos);
     if (l > R || r < L)
         return 0;
@@ -50,18 +42,14 @@ ll query(ll l, ll r, ll pos, ll L, ll R)
 }
 ll uc = 1;
 pii range[N];
-ll dfs(ll now, ll pre)///dfs(1,0)
-{
+ll dfs(ll now, ll pre) { ///dfs(1,0)
     ll cnt = 1, sz = adj[now].size(), mx = 0, special = 0;
-    for (int i = 0; i < sz; i++)
-    {
+    for (int i = 0; i < sz; i++) {
         ll node = adj[now][i];
-        if (node != pre)
-        {
+        if (node != pre) {
             lv[node] = lv[now] + 1;
             cnt += dfs(node, now);
-            if (stsz[node] > mx)
-            {
+            if (stsz[node] > mx) {
                 mx = stsz[node];
                 special = node;
             }
@@ -86,8 +74,7 @@ void dfs2(ll now, ll pre) {
     // out(range[now].first) out(range[now].second)
 }
 
-void HLD(ll pre, ll now, ll head)///HLD(1,1,1)
-{
+void HLD(ll pre, ll now, ll head) { ///HLD(1,1,1)
     node_head[now] = head;
     indx[now] = ++new_pos;
     par[now] = pre;
@@ -95,33 +82,26 @@ void HLD(ll pre, ll now, ll head)///HLD(1,1,1)
     if (sc[now] != 0)
         HLD(now, sc[now], head);
     ll sz = adj[now].size();
-    for (int i = 0; i < sz; i++)
-    {
+    for (int i = 0; i < sz; i++) {
         ll node = adj[now][i];
-        if (node != sc[now] && node != pre)
-        {
+        if (node != sc[now] && node != pre) {
             HLD(now, node, node);
         }
     }
 }
 
-void go_up(ll u, ll v, ll val)///update path
-{
+void go_up(ll u, ll v, ll val) { ///update path
     // out(u) out(v)
-    if (node_head[u] == node_head[v])
-    {
+    if (node_head[u] == node_head[v]) {
         // cout<<"h1"<<endl;
         (lv[u] < lv[v] ? update(1, n, 1, indx[u], indx[v], val) : update(1, n, 1, indx[v], indx[u], val));
         return;
     }
-    if (lv[node_head[u]] > lv[node_head[v]])
-    {
+    if (lv[node_head[u]] > lv[node_head[v]]) {
         // cout<<"h2"<<endl;
         update(1, n, 1, indx[node_head[u]], indx[u], val);
         go_up(par[node_head[u]], v, val);
-    }
-    else
-    {
+    } else {
         // cout<<"h3"<<endl;
         update(1, n, 1, indx[node_head[v]], indx[v], val);
         go_up(u, par[node_head[v]], val);
@@ -149,13 +129,11 @@ int solve() {
         cin >> f >> x;
         if (f == 1) {
             update(1, n, 1, range[x].first, range[x].second, 1);
-        }
-        else if(f==2){
+        } else if(f==2) {
             // out(root);
             // out(x)
-            go_up(root, x , -1);
-        }
-        else{
+            go_up(root, x, -1);
+        } else {
             ll res = query(1, n, 1, indx[x], indx[x]);
             if(res!=1) res=0;
 
@@ -168,9 +146,3 @@ int solve() {
 23
 0 1 2 1 1 1 5 4 2 2 2 3 11 11 9 9 16 16 18 15 14 14 13
 */
-]]></content>
-    <!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-     <tabTrigger>hld</tabTrigger> 
-    <!-- Optional: Set a scope to limit where the snippet will trigger -->
-    <!-- <scope>source.python</scope> -->
-</snippet>

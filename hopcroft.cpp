@@ -1,33 +1,24 @@
-<snippet>
-	<content><![CDATA[
 vector< int > graph[N];
 int n, m, match[N], dist[N];
 int NIL = 0;
-bool bfs()
-{
+bool bfs() {
     int i, u, v, len;
     queue< int > Q;
-    for (i = 1; i <= n; i++)
-    {
-        if (match[i] == NIL)
-        {
+    for (i = 1; i <= n; i++) {
+        if (match[i] == NIL) {
             dist[i] = 0;
             Q.push(i);
-        }
-        else dist[i] = MAX;
+        } else dist[i] = MAX;
     }
     dist[NIL] = MAX;
-    while (!Q.empty())
-    {
-        u = Q.front(); Q.pop();
-        if (u != NIL)
-        {
+    while (!Q.empty()) {
+        u = Q.front();
+        Q.pop();
+        if (u != NIL) {
             len = graph[u].size();
-            for (i = 0; i < len; i++)
-            {
+            for (i = 0; i < len; i++) {
                 v = graph[u][i];
-                if (dist[match[v]] == MAX)
-                {
+                if (dist[match[v]] == MAX) {
                     dist[match[v]] = dist[u] + 1;
                     Q.push(match[v]);
                 }
@@ -36,20 +27,15 @@ bool bfs()
     }
     return (dist[NIL] != MAX);
 }
- 
-bool dfs(int u)
-{
+
+bool dfs(int u) {
     int i, v, len;
-    if (u != NIL)
-    {
+    if (u != NIL) {
         len = graph[u].size();
-        for (i = 0; i < len; i++)
-        {
+        for (i = 0; i < len; i++) {
             v = graph[u][i];
-            if (dist[match[v]] == dist[u] + 1)
-            {
-                if (dfs(match[v]))
-                {
+            if (dist[match[v]] == dist[u] + 1) {
+                if (dfs(match[v])) {
                     match[v] = u;
                     match[u] = v;
                     return true;
@@ -61,9 +47,8 @@ bool dfs(int u)
     }
     return true;
 }
- 
-int hopcroft_karp()
-{
+
+int hopcroft_karp() {
     int matching = 0, i;
     // match[] is assumed NIL for all vertex in graph
     // All nodes on left and right should be distinct
@@ -73,38 +58,30 @@ int hopcroft_karp()
                 matching++;
     return matching;
 }
- 
-void clear()
-{
-   for(int j=0;j<M;j++) graph[j].clear();
+
+void clear() {
+    for(int j=0; j<M; j++) graph[j].clear();
     memz(match);
 }
- 
-int solve()
-{
- 
+
+int solve() {
+
     int p, x, y;
- 
+
     scanf("%d%d%d", &n, &m, &p);
- 
-    for(int i=0;i<p;i++){
+
+    for(int i=0; i<p; i++) {
         scanf("%d%d", &x, &y);
         graph[x].pb(n + y);
         graph[n + y].pb(x);
     }
- 
+
     printf("%d\n", hopcroft_karp());
-    for(int i=1;i<=n;i++){
-    	if(match[i]){
-    		printf("%d %d\n", i, match[i]-n);
-    	}
+    for(int i=1; i<=n; i++) {
+        if(match[i]) {
+            printf("%d %d\n", i, match[i]-n);
+        }
     }
- 
+
     return 0;
 }
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	<tabTrigger>hopcroft</tabTrigger> 
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<!-- <scope>source.python</scope> -->
-</snippet>
