@@ -1,15 +1,11 @@
-<snippet>
-	<content><![CDATA[
 ///loop
 /// -->*************************************
 ///^  |
 ///|  v
 ///<---
-void right()
-{
+void right() {
 //    cout<<"right i "<<i<<" j "<<j<<endl;
-    if(j>=m || vis[i][j]==tc)
-    {
+    if(j>=m || vis[i][j]==tc) {
         j--;
         i++;
         return;
@@ -18,11 +14,9 @@ void right()
     cnt++;
     right();
 }
-void down()
-{
+void down() {
 //    cout<<"down i "<<i<<" j "<<j<<endl;
-    if(i>=n || vis[i][j]==tc)
-    {
+    if(i>=n || vis[i][j]==tc) {
         j--;
         i--;
         return;
@@ -31,11 +25,9 @@ void down()
     i++;
     down();
 }
-void left()
-{
+void left() {
 //    cout<<"left i "<<i<<" j "<<j<<endl;
-    if(j<0 || vis[i][j]==tc)
-    {
+    if(j<0 || vis[i][j]==tc) {
         j++;
         i--;
         return;
@@ -44,11 +36,9 @@ void left()
     j--;
     left();
 }
-void up()
-{
+void up() {
 //    cout<<"up i "<<i<<" j "<<j<<endl;
-    if(i<0 || vis[i][j]==tc)
-    {
+    if(i<0 || vis[i][j]==tc) {
         j++;
         i++;
         return;
@@ -57,9 +47,3 @@ void up()
     i--;
     up();
 }
-]]></content>
-	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
-	<!-- <tabTrigger>hello</tabTrigger> -->
-	<!-- Optional: Set a scope to limit where the snippet will trigger -->
-	<!-- <scope>source.python</scope> -->
-</snippet>
