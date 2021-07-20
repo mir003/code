@@ -20,21 +20,21 @@ void lazy(ll l, ll r, ll pos) {
 
     return;
 }
-void update(ll l, ll r, ll pos, ll L, ll R) { ///range increment by 1
+void update(ll l, ll r, ll pos, ll L, ll R, ll val) {
     lazy(l, r, pos);
     if(l>R || r<L)
         return;
     if(l>=L && r<=R) {
-        tree[pos]+=(r-l+1);
+        tree[pos]+=(r-l+1)*val;
         if(l!=r) {
-            lz[2*pos]++;
-            lz[2*pos+1]++;
+            lz[2*pos]+=val;
+            lz[2*pos+1]+val;
         }
         return;
     }
     ll mid=(l+r)/2;
-    update(l, mid, 2*pos, L, R);
-    update(mid+1, r, 2*pos+1, L, R);
+    update(l, mid, 2*pos, L, R, val);
+    update(mid+1, r, 2*pos+1, L, R, val);
     tree[pos]=tree[2*pos]+tree[2*pos+1];
     return;
 }
