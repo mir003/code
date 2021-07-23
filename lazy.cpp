@@ -38,12 +38,12 @@ void update(ll l, ll r, ll pos, ll L, ll R, ll val) {
     tree[pos]=tree[2*pos]+tree[2*pos+1];
     return;
 }
-ll query(ll l, ll r, ll pos, ll P) {
+ll query(ll l, ll r, ll pos, ll L, ll R) {
     lazy(l, r, pos);
-    if(l>P || r<P)
+    if(l>R || r<L)
         return 0;
-    if(l==r && l==P)
+    if(l>=L && r<=R)
         return tree[pos];
     ll mid=(l+r)/2;
-    return query(l, mid, 2*pos, P)+query(mid+1, r, 2*pos+1, P);
+    return query(l, mid, 2*pos, L, R)+query(mid+1, r, 2*pos+1, L, R);
 }
