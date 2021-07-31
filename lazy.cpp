@@ -28,7 +28,7 @@ void update(ll l, ll r, ll pos, ll L, ll R, ll val) {
         tree[pos]+=(r-l+1)*val;
         if(l!=r) {
             lz[2*pos]+=val;
-            lz[2*pos+1]+val;
+            lz[2*pos+1]+=val;
         }
         return;
     }
