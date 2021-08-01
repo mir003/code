@@ -1,4 +1,5 @@
 /*Only those who endure patiently will be given their reward without limit.*/
+/* problem : https://codeforces.com/contest/282/problem/B */
 #include<bits/stdc++.h>
 #define ll long long///never change it to int -_-
 #define pb push_back
@@ -91,12 +92,13 @@ int main() {
             break;
         }
     }
-    if(abs(p-q)>500) {
+    if(abs(p-q)>500){
         cout<<"-1"<<endl;
         return 0;
     }
-    for(int i=0; i<n; i++) {
-        cout<<res[i];
+    for(int i=0;i<n;i++){
+        if(res[i]) cout<<"A";
+        else cout<<"G";
     }
     return 0;
 }
