@@ -32,7 +32,7 @@ const ll N = 200010, M = 1005;
 ll t;
 ///sparse table for rmq O(1)**********
 ll n, a[N], st[N][20], lg[N];
-void b() {
+void build() {
     for(ll i=0; i<n; i++) {
         st[i][0]=a[i];
     }
@@ -42,7 +42,7 @@ void b() {
         }
     }
 }
-ll q(ll l, ll r) {
+ll query(ll l, ll r) {
     ll sz= r-l+1;
     ll k=lg[sz];
     ll x= st[l][k];
@@ -54,6 +54,7 @@ ll q(ll l, ll r) {
     } else return x;
 }
 
+
 int main() {
     FAST
     lg[1] = 0;
@@ -64,7 +65,7 @@ int main() {
     for(int i=0; i<n; i++) {
         cin>>a[i];
     }
-    b();
+    build();
     ll high = n, low=0, mid,ans=-1;
     while(high>=low) {
         mid=(high+low)/2;
