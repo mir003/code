@@ -1,6 +1,6 @@
 ///sparse table for rmq O(1)**********
 ll n, a[N], st[N][20], lg[N];
-void b() {
+void build() {
     for(ll i=0; i<n; i++) {
         st[i][0]=a[i];
     }
@@ -10,8 +10,7 @@ void b() {
         }
     }
 }
-ll q(ll l, ll r) {
-    if(r>l) return MAX;//invalid for min=MAX, invalid for max=MIN, etc etc
+ll query(ll l, ll r) {
     ll sz= r-l+1;
     ll k=lg[sz];
     ll x= st[l][k];
@@ -31,9 +30,9 @@ int main() {
     for(int i=0; i<n; i++)
         in1(a[i]);
     ll l, r;
-    b();
+    build();
     while(cin>>l>>r) {
-        cout<<l<<" "<<r<<" res "<<q(l,r)<<endl;
+        cout<<l<<" "<<r<<" res "<<query(l,r)<<endl;
     }
     return 0;
 }
