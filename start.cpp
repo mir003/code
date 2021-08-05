@@ -28,53 +28,51 @@
 #define FILE   freopen("input.txt", "r", stdin);  freopen("out.txt", "w", stdout);
 #define coutd cout<<fixed<<setprecision(10)//coutd<<res<<endl;
 using namespace std;
-const ll N = 200010, M = 1005;
-ll t;
-///sparse table for rmq O(1)**********
-ll n, a[N], st[N][20], lg[N];
-void build() {
-    for(ll i=0; i<n; i++) {
-        st[i][0]=a[i];
-    }
-    for(ll j=1; (1LL<<j)<=n; j++) {
-        for(ll i=0; i+(1LL<<j)-1<n; i++) {
-            st[i][j]=min(st[i][j-1],st[i+(1LL<<(j-1))][j-1]);
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/pb_ds/assoc_container.hpp>
+using namespace __gnu_pbds;
+typedef tree<int,null_type, less<ll>,rb_tree_tag,tree_order_statistics_node_update>orderedSet;///less_equal/greater/greater_equal
+orderedSet st;
+//*os.find_by_order(pos)///returns pointer of pos (o indexed)
+//os.order_of_key(val)///returns position of value of greater than value
+
+const ll N = 100001, M = 1005;
+ll t, n;
+vector<ll>prime;
+bool is_comp[N];
+void seive() {
+    is_comp[0]=1;
+    is_comp[1]=1;
+    for(int i=2; i<N; i++) {
+        if(!is_comp[i])
+            prime.pb(i);
+        ll sz=prime.size();
+        for(int j=0; j<sz && i*prime[j]<N ; j++) {
+            is_comp[i*prime[j]]=1;
+            if(i%prime[j]==0)
+                break;
         }
     }
 }
-ll query(ll l, ll r) {
-    ll sz= r-l+1;
-    ll k=lg[sz];
-    ll x= st[l][k];
-    sz-=(1LL<<k);
-    if(sz>0) {
-        k=lg[sz]+1;
-        ll y= r-(1LL<<k)+1;
-        return min(x,st[y][k]);
-    } else return x;
-}
-
-
+random_device rd;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 int main() {
-    FAST
-    lg[1] = 0;
-    for (int i = 2; i <= N-5; i++)
-        lg[i] = lg[i/2] + 1;
-
+    seive();
+    for(auto u:prime) st.insert(u);
     cin>>n;
-    for(int i=0; i<n; i++) {
-        cin>>a[i];
+    ll cur=1;
+    while(!st.empty()) {
+        ll l = 0, r = (ll)st.size()-1;
+        ll rr = (rng()+rng())%MOD, cnt=0;
+        ll random = (rr % (r - l + 1)) + l;
+        cout<<"B "<<*st.find_by_order(random)<<endl;
+        cin>>cnt;
+        cout<<"B "<<*st.find_by_order(random)<<endl;
+        cin>>cnt;
+        if(cnt){
+
+        }
     }
-    build();
-    ll high = n, low=0, mid,ans=-1;
-    while(high>=low) {
-        mid=(high+low)/2;
-        if(fun(mid)) {
-            high=mid-1;
-            ans=mid;
-        } else low=mid+1;
-    }
-    cout<<ans<<endl;
     return 0;
 }
 /*

@@ -1,5 +1,5 @@
 random_device rd;
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());;
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 int solve() {
     while (m--) {
         ll l, r, res = 0;
