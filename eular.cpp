@@ -22,7 +22,7 @@ void eular_seive() { ///e[i] = number of coprimes <= i
         }
     }
     e[1]=1;
-    ///sum(lcm(i,n))=(n*(res[n]+1))/2) where i=(1-n)
+    ///sum(lcm(i,n))=(n*(res[n]+1))/2) where i=(1...n)
     for(ll i=1; i<=N-10; i++)
         for(ll j=i; j<=N-10; j+=i) {
             res[j]+=(i*e[i]);

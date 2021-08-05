@@ -28,51 +28,101 @@
 #define FILE   freopen("input.txt", "r", stdin);  freopen("out.txt", "w", stdout);
 #define coutd cout<<fixed<<setprecision(10)//coutd<<res<<endl;
 using namespace std;
-#include <ext/pb_ds/tree_policy.hpp>
-#include <ext/pb_ds/assoc_container.hpp>
-using namespace __gnu_pbds;
-typedef tree<int,null_type, less<ll>,rb_tree_tag,tree_order_statistics_node_update>orderedSet;///less_equal/greater/greater_equal
-orderedSet st;
-//*os.find_by_order(pos)///returns pointer of pos (o indexed)
-//os.order_of_key(val)///returns position of value of greater than value
-
 const ll N = 100001, M = 1005;
-ll t, n;
+ll t, n, m;
 vector<ll>prime;
 bool is_comp[N];
 void seive() {
     is_comp[0]=1;
     is_comp[1]=1;
-    for(int i=2; i<N; i++) {
+    for(int i=2; i<=n; i++) {
         if(!is_comp[i])
             prime.pb(i);
         ll sz=prime.size();
-        for(int j=0; j<sz && i*prime[j]<N ; j++) {
+        for(int j=0; j<sz && i*prime[j]<=n ; j++) {
             is_comp[i*prime[j]]=1;
             if(i%prime[j]==0)
                 break;
         }
     }
 }
-random_device rd;
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-int main() {
-    seive();
-    for(auto u:prime) st.insert(u);
-    cin>>n;
-    ll cur=1;
-    while(!st.empty()) {
-        ll l = 0, r = (ll)st.size()-1;
-        ll rr = (rng()+rng())%MOD, cnt=0;
-        ll random = (rr % (r - l + 1)) + l;
-        cout<<"B "<<*st.find_by_order(random)<<endl;
-        cin>>cnt;
-        cout<<"B "<<*st.find_by_order(random)<<endl;
-        cin>>cnt;
-        if(cnt){
 
+ll pw[25];
+bool vis[N];
+void del(int u) {
+    for(int i=u; i<=n; i+=u) {
+        if(vis[i]==0) m--;
+        vis[i]=1;
+    }
+    return;
+}
+int main() {
+    cin>>n;
+    seive();
+    m=n;
+    if(n==1) {
+        cout<<"C 1"<<endl;
+        cout<<flush;
+        return 0;
+    }
+    ll cur=1,cnt, sz= (ll)prime.size(), ss=sqrt(n);
+    ll k=0, sq=sqrt(sz);
+    for(int i=sz-1; i>=0 && prime[i]>ss; i--) {
+        k++;
+        del(prime[i]);
+        cout<<"B "<<prime[i]<<endl;
+        cout<<flush;
+        cin>>cnt;
+        if(k==sq || (i==0 || prime[i-1]<ss)) {
+            cout<<"A 1"<<endl;
+            cout<<flush;
+            cin>>cnt;
+            if(m!=cnt) {
+                for(int j=0; j<k; j++) {
+                    cout<<"A "<<prime[i+j]<<endl;
+                    cout<<flush;
+                    cin>>cnt;
+                    if(cnt) {
+                        cur*=prime[i+j];
+                    }
+                }
+                break;
+            }
+            k=0;
         }
     }
+    for(auto p:prime) {
+        if(p>n/cur || p>ss) break;
+        cout<<"B "<<p<<endl;
+        cout<<flush;
+        cin>>cnt;
+        cout<<"B "<<p<<endl;
+        cout<<flush;
+        cin>>cnt;
+        if(cnt) {
+            ll high=0, low=0, ans=0;
+            pw[0]=p;
+            for(int i=1; i<20; i++) {
+                if(pw[i-1]*p>n/cur) break;
+                pw[i]=pw[i-1]*p;
+                high=i;
+            }
+            while(high>=low) {
+                ll mid=(high+low)/2;
+                cout<<"B "<<pw[mid]<<endl;
+                cout<<flush;
+                cin>>cnt;
+                if(cnt) {
+                    ans=mid;
+                    low=mid+1;
+                } else high=mid-1;
+            }
+            cur*=pw[ans];
+        }
+    }
+
+    cout<<"C "<<cur<<endl;
+    cout<<flush;
     return 0;
 }
 /*
