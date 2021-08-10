@@ -28,103 +28,113 @@
 #define FILE   freopen("input.txt", "r", stdin);  freopen("out.txt", "w", stdout);
 #define coutd cout<<fixed<<setprecision(10)//coutd<<res<<endl;
 using namespace std;
-const ll N = 100001, M = 1005;
-ll t, n, m;
-vector<ll>prime;
-bool is_comp[N];
-void seive() {
-    is_comp[0]=1;
-    is_comp[1]=1;
-    for(int i=2; i<=n; i++) {
-        if(!is_comp[i])
-            prime.pb(i);
-        ll sz=prime.size();
-        for(int j=0; j<sz && i*prime[j]<=n ; j++) {
-            is_comp[i*prime[j]]=1;
-            if(i%prime[j]==0)
-                break;
+const ll N = 800005, M = 105;
+ll n, m,par[N],vis[N], mem[N];
+vector<ll>v;
+vector<pii>in[N];
+pair<ll, ll> tree[3*N],lz[3*N];
+map<ll, ll>mp;
+void lazy(ll l, ll r, ll pos) {
+    if(lz[pos].first!=0) {
+        if(tree[pos]<lz[pos])
+            tree[pos]=lz[pos];
+        if(l!=r) {
+            lz[2*pos]=max(lz[2*pos], lz[pos]);
+            lz[2*pos+1]=max(lz[2*pos+1],lz[pos]);
         }
     }
-}
-
-ll pw[25];
-bool vis[N];
-void del(int u) {
-    for(int i=u; i<=n; i+=u) {
-        if(vis[i]==0) m--;
-        vis[i]=1;
-    }
+    lz[pos]= {0, 0};
     return;
 }
+void update(ll l, ll r, ll pos, ll L, ll R, pii val) {
+    lazy(l, r, pos);
+    if(l>R || r<L)
+        return;
+    if(l>=L && r<=R) {
+        if(tree[pos]<val) {
+            tree[pos]=val;
+        }
+        if(l!=r) {
+            lz[2*pos]=max(lz[2*pos], val);
+            lz[2*pos+1]=max(lz[2*pos+1],val);
+        }
+        return;
+    }
+    ll mid=(l+r)/2;
+    update(l, mid, 2*pos, L, R, val);
+    update(mid+1, r, 2*pos+1, L, R, val);
+    tree[pos]=max(tree[2*pos],tree[2*pos+1]);
+    return;
+}
+pair<ll,ll> query(ll l, ll r, ll pos, ll L, ll R) {
+    lazy(l, r, pos);
+    if(l>R || r<L)
+        return {0, 0};
+    if(l>=L && r<=R)
+        return tree[pos];
+    ll mid=(l+r)/2;
+    return max(query(l, mid, 2*pos, L, R),query(mid+1, r, 2*pos+1, L, R));
+}
+
 int main() {
-    cin>>n;
-    seive();
-    m=n;
-    if(n==1) {
-        cout<<"C 1"<<endl;
-        cout<<flush;
-        return 0;
+    FAST
+    cin>>n>>m;
+    for(int i=1; i<=m; i++) {
+        ll l, r, k;
+        cin>>k>>l>>r;
+        in[k].pb({l,r});
+        v.pb(l);
+        v.pb(r);
     }
-    ll cur=1,cnt, sz= (ll)prime.size(), ss=sqrt(n);
-    ll k=0, sq=sqrt(sz);
-    for(int i=sz-1; i>=0 && prime[i]>ss; i--) {
-        k++;
-        del(prime[i]);
-        cout<<"B "<<prime[i]<<endl;
-        cout<<flush;
-        cin>>cnt;
-        if(k==sq || (i==0 || prime[i-1]<ss)) {
-            cout<<"A 1"<<endl;
-            cout<<flush;
-            cin>>cnt;
-            if(m!=cnt) {
-                for(int j=0; j<k; j++) {
-                    cout<<"A "<<prime[i+j]<<endl;
-                    cout<<flush;
-                    cin>>cnt;
-                    if(cnt) {
-                        cur*=prime[i+j];
-                    }
+    sort(v.begin(), v.end());
+    mp[v[0]]=1;
+    ll c=1,sz=v.size();
+    for(int i=1; i<sz; i++) {
+        if(v[i-1]!=v[i]) {
+            c++;
+            mp[v[i]]=c;
+        }
+    }
+    ll res=0, id=0;
+    for(int i=1; i<=n; i++) {
+        ll pre = 0;
+        for(auto u:in[i]) {
+            ll l = mp[u.first], r = mp[u.second];
+            pii q = query(1, c, 1, l, r);
+            if(q.second==0) {
+                mem[i]=max(mem[i],1LL);
+            } else {
+                if(q.first+1>mem[i]) {
+                    mem[i]=max(q.first+1, mem[i]);
+                    pre=q.second;
                 }
-                break;
             }
-            k=0;
         }
+        for(auto u:in[i]) {
+            ll l = mp[u.first], r = mp[u.second];
+            update(1, c, 1, l, r, {mem[i], i});
+        }
+        if(mem[i]>res) {
+            res=mem[i];
+            id=i;
+        }
+        par[i]=pre;
     }
-    for(auto p:prime) {
-        if(p>n/cur || p>ss) break;
-        cout<<"B "<<p<<endl;
-        cout<<flush;
-        cin>>cnt;
-        cout<<"B "<<p<<endl;
-        cout<<flush;
-        cin>>cnt;
-        if(cnt) {
-            ll high=0, low=0, ans=0;
-            pw[0]=p;
-            for(int i=1; i<20; i++) {
-                if(pw[i-1]*p>n/cur) break;
-                pw[i]=pw[i-1]*p;
-                high=i;
-            }
-            while(high>=low) {
-                ll mid=(high+low)/2;
-                cout<<"B "<<pw[mid]<<endl;
-                cout<<flush;
-                cin>>cnt;
-                if(cnt) {
-                    ans=mid;
-                    low=mid+1;
-                } else high=mid-1;
-            }
-            cur*=pw[ans];
-        }
+    while(id!=0) {
+        vis[id]=1;
+        id=par[id];
+    }
+    cout<<n-res<<endl;
+    for(int i=1; i<=n; i++) {
+        if(vis[i]==0) cout<<i<<" ";
     }
 
-    cout<<"C "<<cur<<endl;
-    cout<<flush;
     return 0;
 }
 /*
-
+3 4
+1 2 3
+2 3 6
+3 4 8
+1 7 9
 */
