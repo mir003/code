@@ -29,112 +29,117 @@
 #define coutd cout<<fixed<<setprecision(10)//coutd<<res<<endl;
 using namespace std;
 const ll N = 800005, M = 105;
-ll n, m,par[N],vis[N], mem[N];
-vector<ll>v;
-vector<pii>in[N];
-pair<ll, ll> tree[3*N],lz[3*N];
-map<ll, ll>mp;
-void lazy(ll l, ll r, ll pos) {
-    if(lz[pos].first!=0) {
-        if(tree[pos]<lz[pos])
-            tree[pos]=lz[pos];
-        if(l!=r) {
-            lz[2*pos]=max(lz[2*pos], lz[pos]);
-            lz[2*pos+1]=max(lz[2*pos+1],lz[pos]);
-        }
-    }
-    lz[pos]= {0, 0};
-    return;
-}
-void update(ll l, ll r, ll pos, ll L, ll R, pii val) {
-    lazy(l, r, pos);
-    if(l>R || r<L)
-        return;
-    if(l>=L && r<=R) {
-        if(tree[pos]<val) {
-            tree[pos]=val;
-        }
-        if(l!=r) {
-            lz[2*pos]=max(lz[2*pos], val);
-            lz[2*pos+1]=max(lz[2*pos+1],val);
-        }
-        return;
-    }
-    ll mid=(l+r)/2;
-    update(l, mid, 2*pos, L, R, val);
-    update(mid+1, r, 2*pos+1, L, R, val);
-    tree[pos]=max(tree[2*pos],tree[2*pos+1]);
-    return;
-}
-pair<ll,ll> query(ll l, ll r, ll pos, ll L, ll R) {
-    lazy(l, r, pos);
-    if(l>R || r<L)
-        return {0, 0};
-    if(l>=L && r<=R)
-        return tree[pos];
-    ll mid=(l+r)/2;
-    return max(query(l, mid, 2*pos, L, R),query(mid+1, r, 2*pos+1, L, R));
-}
+vector<ll>adj[N];
+ll n, m, q, par[N], lv[N], stsz[N], sc[N], node_head[N], new_pos, cost[N], indx[N],in[N], root=1;
+ll tree[4 * N], lz[4 * N];
 
-int main() {
-    FAST
-    cin>>n>>m;
-    for(int i=1; i<=m; i++) {
-        ll l, r, k;
-        cin>>k>>l>>r;
-        in[k].pb({l,r});
-        v.pb(l);
-        v.pb(r);
+//void lazy(ll l, ll r, ll pos) {
+//    if(lz[pos]==0) return;
+//    tree[pos] +=  (r-l+1)*lz[pos];
+//    if (l != r) {
+//        lz[2 * pos] += lz[pos];
+//        lz[2 * pos + 1] += lz[pos];
+//    }
+//    lz[pos] = 0;
+//    return;
+//}
+void update(ll l, ll r, ll pos, ll L, ll R, ll val) {
+//    lazy(l, r, pos);
+    if (l > R || r < L)
+        return;
+    if (l >= L && r <= R) {
+        tree[pos] ^= 1;
+//        if (l != r) {
+//            lz[2 * pos] += val;
+//            lz[2 * pos + 1] += val;
+//        }
+        return;
     }
-    sort(v.begin(), v.end());
-    mp[v[0]]=1;
-    ll c=1,sz=v.size();
-    for(int i=1; i<sz; i++) {
-        if(v[i-1]!=v[i]) {
-            c++;
-            mp[v[i]]=c;
-        }
+    ll mid = (l + r) / 2;
+    update(l, mid, 2 * pos, L, R, val);
+    update(mid + 1, r, 2 * pos + 1, L, R, val);
+    tree[pos] = tree[2 * pos]+tree[2 * pos + 1];
+    return;
+}
+ll query(ll l, ll r, ll pos, ll L, ll R, ll val) {
+//    lazy(l, r, pos);
+//    if (l > R || r < L)
+//        return 0;
+    if (l==r) {
+        if(tree[pos]==val) return l;
+        return MAX;
     }
-    ll res=0, id=0;
-    for(int i=1; i<=n; i++) {
-        ll pre = 0;
-        for(auto u:in[i]) {
-            ll l = mp[u.first], r = mp[u.second];
-            pii q = query(1, c, 1, l, r);
-            if(q.second==0) {
-                mem[i]=max(mem[i],1LL);
-            } else {
-                if(q.first+1>mem[i]) {
-                    mem[i]=max(q.first+1, mem[i]);
-                    pre=q.second;
-                }
+    ll mid = (l + r) / 2;
+    if(tree[2*pos]>=val) {
+        return query(l, mid, 2 * pos, L, R, val);
+    }
+    return query(mid + 1, r, 2 * pos + 1, L, R, val-tree[2*pos]);
+}
+ll dfs(ll now, ll pre) { ///dfs(1,0)
+    ll cnt = 1, sz = adj[now].size(), mx = 0, special = 0;
+    for (auto node:adj[now]) {
+        if (node != pre) {
+            lv[node] = lv[now] + 1;
+            cnt += dfs(node, now);
+            if (stsz[node] > mx) {
+                mx = stsz[node];
+                special = node;
             }
         }
-        for(auto u:in[i]) {
-            ll l = mp[u.first], r = mp[u.second];
-            update(1, c, 1, l, r, {mem[i], i});
+    }
+    sc[now] = special;
+    return stsz[now] = cnt;
+}
+void HLD(ll pre, ll now, ll head) { ///HLD(1,1,1)
+    node_head[now] = head;
+    indx[now] = ++new_pos;
+    in[new_pos]=now;
+    par[now] = pre;
+    //update(1, n, 1, new_pos, new_pos, 0);
+    if (sc[now] != 0)
+        HLD(now, sc[now], head);
+    ll sz = adj[now].size();
+    for (int i = 0; i < sz; i++) {
+        ll node = adj[now][i];
+        if (node != sc[now] && node != pre) {
+            HLD(now, node, node);
         }
-        if(mem[i]>res) {
-            res=mem[i];
-            id=i;
-        }
-        par[i]=pre;
     }
-    while(id!=0) {
-        vis[id]=1;
-        id=par[id];
-    }
-    cout<<n-res<<endl;
-    for(int i=1; i<=n; i++) {
-        if(vis[i]==0) cout<<i<<" ";
-    }
+}
 
+ll go_up(ll u) {
+    if (node_head[u] == 1) {
+        return query(1, n, 1, indx[1], indx[u], 1);
+    }
+    return min(query(1, n, 1, indx[node_head[u]], indx[u], 1), go_up(par[node_head[u]]));
+}
+int main() {
+    FAST
+    cin >> n>>m;
+    for (int i = 1; i < n; i++) {
+        ll u, v;
+        cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+    dfs(root, 0);
+    HLD(0, root, root);
+//    dfs2(root, 0);
+    while (m--) {
+        ll u, v;
+        cin>>u>>v;
+        if(u==0) {
+            update(1, n, 1, indx[v], indx[v], 1);
+        } else {
+            ll res = go_up(v);
+            if(res==MAX) res=-1;
+            else res= in[res];
+            cout<<res<<endl;
+        }
+    }
     return 0;
 }
 /*
-3 4
-1 2 3
-2 3 6
-3 4 8
-1 7 9
+
 */
+
