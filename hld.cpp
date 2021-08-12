@@ -39,8 +39,6 @@ ll query(ll l, ll r, ll pos, ll L, ll R) {
     ll mid = (l + r) / 2;
     return query(l, mid, 2 * pos, L, R) + query(mid + 1, r, 2 * pos + 1, L, R);
 }
-ll uc = 1;
-pii range[N];
 ll dfs(ll now, ll pre) { ///dfs(1,0)
     ll cnt = 1, sz = adj[now].size(), mx = 0, special = 0;
     for (auto node:adj[now]) {
@@ -56,6 +54,7 @@ ll dfs(ll now, ll pre) { ///dfs(1,0)
     sc[now] = special;
     return stsz[now] = cnt;
 }
+pii range[N];
 void dfs2(ll now, ll pre) {
     range[now].first = indx[now];
     range[now].second = indx[now];
