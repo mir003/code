@@ -9,23 +9,23 @@ void build(ll l, ll r, ll pos) {
     tree[pos]=tree[2*pos]+tree[2*pos+1];
     return;
 }
-void update(ll l, ll r, ll pos, ll L, ll R) { ///range increment by 1
-    if(l>R || r<L)
+void update(ll l, ll r, ll pos, ll P, ll val) { ///point update
+    if(l>P || r<P)
         return;
-    if(l>=L && r<=R) {
-        tree[pos]+=(r-l+1);
+    if(l==P && l==r) {
+        tree[pos]+=val;
         return;
     }
     ll mid=(l+r)/2;
-    update(l, mid, 2*pos, L, R);
-    update(mid+1, r, 2*pos+1, L, R);
+    update(l, mid, 2*pos, P, val);
+    update(mid+1, r, 2*pos+1, P, val);
     tree[pos]=tree[2*pos]+tree[2*pos+1];
     return;
 }
-ll query(ll l, ll r, ll pos, ll P) {
-    if(l>P || r<P)
+ll query(ll l, ll r, ll pos, ll L, ll R) {///range query
+    if(l>R || r<L)
         return 0;
-    if(l==r && l==P)
+    if(l>=L && r<=R)
         return tree[pos];
     ll mid=(l+r)/2;
     return query(l, mid, 2*pos, P)+query(mid+1, r, 2*pos+1, P);

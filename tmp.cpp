@@ -2,7 +2,7 @@
 #include<bits/stdc++.h>
 #define ll long long///never change it to int -_-
 #define pb push_back
-#define MAX 2e18
+#define MAX 2e17
 #define MIN -2e18
 #define MAXi 1e9
 #define MINi -1e9
@@ -28,42 +28,46 @@
 #define FILE   freopen("input.txt", "r", stdin);  freopen("out.txt", "w", stdout);
 #define coutd cout<<fixed<<setprecision(10)//coutd<<res<<endl;
 using namespace std;
-const ll N = 300010, M = 55;
-ll n, m, k, freq[N],cnt;
-queue<ll>q[N], finq;
+const ll N = 300005, M = 1005;
+ll t, n, m;
+vector<ll>adj[N], cost[N];
+ll d[N];
+void dijkstra(ll s) {
+    priority_queue<pii> pq;
+    pq.push({0, s});
+    for (int i = 1; i <= n; i++) {
+        d[i] = MAX;
+    }
+    d[s] = 0;
+    while (!pq.empty()) {
+        ll u = pq.top().second;
+        ll c = -pq.top().first;
+        pq.pop();
+        if (d[u] < c) continue;
+        ll sz = adj[u].size();
+        for (int i = 0; i < sz; i++) {
+            ll v = adj[u][i];
+            if (d[v] > d[u] + cost[u][i]) {
+                d[v] = d[u] + cost[u][i];
+                pq.push({ -d[v], v});
+            }
+        }
+    }
+}
 int main() {
     FAST
     cin>>n>>m;
-    for(int i=0; i<m; i++) {
-        cin>>k;
-        for(int j=0; j<k; j++) {
-            ll p;
-            cin>>p;
-            q[i].push(p);
-        }
-        finq.push(i);
+    for(int i=0;i<m;i++){
+        ll u, v, w;
+        cin>>u>v>>w;
+        adj[u].pb(v);
+        adj[v].pb(u);
+        cost[u].pb(w);
+        cost[v].pb(w);
     }
-    memn(freq);
-    while(!finq.empty()) {
-        ll u = finq.front();
-        finq.pop();
-        ll tp  = q[u].front();
-        if(freq[tp]!=u && freq[tp]!=-1) {
-            q[u].pop();
-            q[freq[tp]].pop();
-            if(!q[u].empty()) finq.push(u);
-            if(!q[freq[tp]].empty()) finq.push(freq[tp]);
-        } else {
-            freq[tp]=u;
-        }
+    for(int i=1;i<=n;i++){
+        cout<<
     }
-    for(int i=0; i<m; i++) {
-        if(!q[i].empty()) {
-            cout<<"No"<<endl;
-            return 0;
-        }
-    }
-    cout<<"Yes"<<endl;
     return 0;
 }
 /*

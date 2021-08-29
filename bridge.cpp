@@ -1,23 +1,17 @@
 ll tim, disc[N], low[N], vis[N], cl;
 vector<ll>adj[N];
 vector< pair<ll, ll> >res;
-void bridge(ll u, ll par) { ///increase cl in every testcase
-    vis[u]=cl;
-    disc[u]= tim++;
-    low[u]=disc[u];
-    for(auto v:adj[u]) {
-        if(v!=par) {
-            if(vis[v]==cl) { ///backage
-                low[u] = min(low[u], disc[v]);
-            } else {
-                bridge(v, u, 0);
-                low[u] = min(low[u], low[v]);
-                if(disc[u]<low[v] ) {
-                    if(u<v)
-                        res.pb(make_pair(u,v));
-                    else
-                        res.pb(make_pair(v,u));
-                }
+void bridge(ll s, ll pre){
+    disc[s]=++tim;
+    low[s]=tim;
+    for(auto u:adj[s]){
+        if(u!=pre){
+            if(disc[u]==0){
+                bridge(u, s);
+            }
+            low[s]=min(low[s], low[u]);
+            if(low[u]>disc[s]){
+                res.pb({u,v});
             }
         }
     }
