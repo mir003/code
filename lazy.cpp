@@ -10,14 +10,12 @@ void build(ll l, ll r, ll pos) {
     return;
 }
 void lazy(ll l, ll r, ll pos) {
-
     tree[pos]+=((r-l+1)*lz[pos]);
     if(l!=r) {
         lz[2*pos]+=lz[pos];
         lz[2*pos+1]+=lz[pos];
     }
     lz[pos]=0;
-
     return;
 }
 void update(ll l, ll r, ll pos, ll L, ll R, ll val) {
